@@ -97,7 +97,7 @@
 | 字段 | JSON 类型 | 取值和说明 |
 | --- | --- | --- |
 | `preferred_main_camera_id` | string | 主摄 Camera ID。 |
-| `hdr_plus_frame_count` | integer | HDR+ 总帧数，范围 `1..20`；开启包围曝光时实际最少为 2 帧。X8 Ultra、X9 Ultra 内置为 8 帧。 |
+| `hdr_plus_frame_count` | integer | HDR+ 总帧数，范围 `1..50`（与多帧降噪共用 `MultiFrameConfig.MAX_FRAME_COUNT`，且必须小于等于采集 reader 的 `CAPTURE_READER_MAX_IMAGES`=50；等于该值时零余量，要求保留时刻无未释放帧）；开启包围曝光时实际最少为 2 帧。X8 Ultra、X9 Ultra 内置为 8 帧。注意：合并器会同时持有全部帧，`RAW_SENSOR` 单帧约 25.2 MB，50 帧约 1.23 GiB 原生/gralloc 驻留。 |
 | `preferred_macro_camera_id` | string | 微距 Camera ID。 |
 | `custom_lens_ids` | array of string | 自定义镜头 ID 列表。 |
 | `lens_id_blacklist` | array of string | 从所有发现来源中排除的镜头 ID 列表。 |

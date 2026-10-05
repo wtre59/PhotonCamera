@@ -15,7 +15,21 @@ object MultiFrameConfig {
     const val MIN_HDR_PLUS_FRAME_COUNT = 1
     const val MIN_HDR_PLUS_BRACKET_FRAME_COUNT = 2
     const val DEFAULT_HDR_PLUS_FRAME_COUNT = 3
-    const val MAX_FRAME_COUNT = 20
+
+    /**
+     * 多帧降噪与 HDR+ 共用的帧数上限。
+     *
+     * 内存提示：合并器（GlesMgcRawSpatialStacker / GlesMgcRawSabre）会同时持有全部帧。
+     * RAW_SENSOR 为 16 位未打包，4096x3072 时单帧约 25.2 MB，故上限 N 对应约
+     * N * 25.2 MB 的原生/gralloc 驻留（20 帧约 503 MB，50 帧约 1.23 GiB），
+     * 且不含 GPU 纹理与合并工作集。
+     *
+     * 提高该值时，必须同步确认 Camera2Controller.CAPTURE_READER_MAX_IMAGES 仍有余量：
+     * 其保留校验为 occupied + frameCount > CAPTURE_READER_MAX_IMAGES，等于上限时零余量，
+     * 即要求保留时刻 occupied == 0，且全部帧同时驻留恰好占满 reader 的 maxImages。
+     * 该 reader 上限受设备 RAW 流约束（实测提高到 64 会导致启动即闪退），故不能靠它加余量。
+     */
+    const val MAX_FRAME_COUNT = 50
     const val DEFAULT_HDR_PLUS_BRACKET_EXPOSURE = false
     const val MIN_OUTPUT_SCALE = 1f
     const val MAX_OUTPUT_SCALE = 2f
